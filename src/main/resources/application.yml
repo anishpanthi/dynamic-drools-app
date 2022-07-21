@@ -1,1 +1,6 @@
+server:
+  port: 8282
 
+spring:
+  application:
+    name: dynamic-app-drools

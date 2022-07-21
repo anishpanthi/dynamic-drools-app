@@ -1,4 +1,4 @@
-package com.app.dynamic.drools.service;
+package com.app.dynamic.drools.utils;
 
 import com.app.dynamic.drools.entity.Rule;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,8 @@ import org.kie.api.builder.Results;
 import org.kie.api.builder.model.KieBaseModel;
 import org.kie.api.builder.model.KieModuleModel;
 import org.kie.api.runtime.KieContainer;
-import org.springframework.stereotype.Service;
+import org.kie.api.runtime.KieSession;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,9 +22,9 @@ import java.util.List;
 /**
  * @author apanthi
  */
-@Service
+@Component
 @Slf4j
-public class RuleService {
+public class RuleUtil {
 
   private final KieServices kieServices = KieServices.get();
 
@@ -119,5 +120,18 @@ public class RuleService {
     }
   }
 
-  
+  /**
+   * Trigger rules, which are simply simulated here. An integer type value will be inserted into the
+   * rules
+   */
+  public String fireRule(String kieBaseName, Integer param) {
+    // Create kiesession
+    KieSession kieSession = kieContainer.newKieSession(kieBaseName + "-session");
+    StringBuilder resultInfo = new StringBuilder();
+    kieSession.setGlobal("resultInfo", resultInfo);
+    kieSession.insert(param);
+    kieSession.fireAllRules();
+    kieSession.dispose();
+    return resultInfo.toString();
+  }
 }
